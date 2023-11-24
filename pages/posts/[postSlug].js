@@ -6,7 +6,9 @@ import { getApolloClient } from "../../lib/apollo-client";
 
 import styles from "../../styles/Home.module.css";
 
-export default function Post({ post, site }) {
+
+
+export default function Post({ post, site, myField }) {
   return (
     <div className={styles.container}>
       <Head>
@@ -20,6 +22,15 @@ export default function Post({ post, site }) {
 
       <main className={styles.main}>
         <h1 className={styles.title}>{post.translation.title}</h1>
+        {myField.custImg && (
+        <figure>
+          <img src={myField.custImg.sourceUrl} alt={`Custom Image`} />
+          <figcaption style={{ color: "white" }}>From {myField.newcf}</figcaption>
+        </figure>
+        )}
+
+
+
 
         <div className={styles.grid}>
           <div
@@ -62,10 +73,24 @@ export async function getStaticProps({ params, locale }) {
             slug
             content
             title
+            myField {
+              custImg {
+                sourceUrl
+                altText
+              }
+              newcf
+            }
             language {
               locale
               slug
             }
+          }
+          myField {
+            custImg {
+              sourceUrl
+              altText
+            }
+            newcf
           }
         }
       }
@@ -88,6 +113,9 @@ export async function getStaticProps({ params, locale }) {
       language,
       path: `/posts/${post.slug}`,
       site,
+      myField: {
+        ...post.myField
+      }
     },
     revalidate: 10,
   };
